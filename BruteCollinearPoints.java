@@ -14,7 +14,7 @@ public class BruteCollinearPoints {
     public BruteCollinearPoints(Point[] points) {    // finds all line segments containing 4 points
         n = points.length;
         aux = new Point[n];
-        
+
         for (int i = 0; i < n; i++) {
             if (points[i] == null) 
                 throw new NullPointerException("A Point is null");
@@ -29,9 +29,7 @@ public class BruteCollinearPoints {
     }
     
     private static class ByPoint implements Comparator<Point> {
-        public int compare(Point v, Point w){
-            return v.compareTo(w);
-        }
+        public int compare(Point v, Point w){return v.compareTo(w);}
     }
 
     public int numberOfSegments(){        // the number of line segments
@@ -49,7 +47,7 @@ public class BruteCollinearPoints {
                     for (int l = k + 1; l < n; l++) {
                         double slopekl = aux[k].slopeTo(aux[l]);
                         if (slopeij == slopejk &&  slopejk == slopekl)
-                            stack.push(new LineSegment(aux[j], aux[l]));
+                            stack.push(new LineSegment(aux[i], aux[l]));
                     }
                 }
             }
@@ -63,9 +61,9 @@ public class BruteCollinearPoints {
     public static void main(String[] args) {
         // read the n points from a file
         In in = new In(args[0]);
-        int npoints = in.readInt();
-        Point[] points = new Point[npoints];
-        for (int i = 0; i < npoints; i++) {
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
             int x = in.readInt();
             int y = in.readInt();
             points[i] = new Point(x, y);
