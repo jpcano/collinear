@@ -6,26 +6,22 @@ import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class FastCollinearPoints {
-    Point[] points;
-    Point[] aux;
-    LineSegment[] segments;
-    int n;
+    private Point[] points;
+    private int n;
 
     public FastCollinearPoints(Point[] points) {    // finds all line segments containing 4 points
         n = points.length;
         this.points = new Point[n];
-        aux = new Point[n];
 
         for (int i = 0; i < n; i++) {
             if (points[i] == null) 
                 throw new NullPointerException("A Point is null");
             this.points[i] = points[i];
-            aux[i] = points[i];
         }
-        Arrays.sort(aux, new ByPoint());
+        Arrays.sort(this.points, new ByPoint());
         // check duplicates
         for (int i = 1; i < n; i++) {
-            if (aux[i] == aux[i - 1])
+            if (this.points[i].compareTo(this.points[i - 1]) == 0)
               throw new java.lang.IllegalArgumentException("Duplicated Point");
         }
     }
@@ -35,30 +31,32 @@ public class FastCollinearPoints {
     }
 
     public int numberOfSegments(){        // the number of line segments
+        LineSegment[] segments;
+        segments = segments();
         return segments.length;
     }
     
     public LineSegment[] segments() {                // the line segments
         Stack<LineSegment> stack = new Stack<LineSegment>();
         Point origin;
+        LineSegment[] segments;
+        Point[] aux;
+        Point[] colinear;
 
-        for (int i = 0; i < n; i++) {
-            origin = points[i];
-            System.out.println("ordering by slope");
-            Arrays.sort(aux, origin.slopeOrder());
-            for (int l = 0; l < aux.length; l++) {
-                System.out.println(origin.slopeTo(aux[l]));
+        aux = new Point[n];
+        for (int i = 0; i < n - 3; i++) {
+            for (int iter = i; iter < n; iter++)
+                aux[iter] = points[iter];
+            origin = aux[i];
+            Arrays.sort(aux, i + 1, n, origin.slopeOrder());
+            for (int j = i + 1; j < n - 2; j++ ) {
+                if (checkSlopes(origin, aux[j], aux[j + 2])) {
+                    stack.push(new LineSegment(origin, aux[j + 2]));
+                    j++;
+                }
             }
-            for (int j = 0, k = 3; j < n - 3; j = j + k, k = j + 3) {
-                System.out.println("Checking " + j + " with " + k);
-                if (checkSlopes(origin, aux[j], aux[k++])) {
-                    System.out.println("after");
-                    while (k < n && checkSlopes(origin, aux[j], aux[k++]));
-                    stack.push(new LineSegment(aux[j], aux[k - 1]));
-                 }
-            }
+
         }
-        System.out.println("heythere");
         segments = new LineSegment[stack.size()];
         for (int i = 0; i < segments.length; i++)
             segments[i] = stack.pop();

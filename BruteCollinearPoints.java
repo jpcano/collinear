@@ -7,9 +7,8 @@ import edu.princeton.cs.algs4.StdDraw;
 
 public class BruteCollinearPoints {
    
-    Point[] aux;
-    int n;
-    LineSegment[] segments;
+    private Point[] aux;
+    private int n;
 
     public BruteCollinearPoints(Point[] points) {    // finds all line segments containing 4 points
         n = points.length;
@@ -23,7 +22,7 @@ public class BruteCollinearPoints {
         Arrays.sort(aux, new ByPoint());
         // check duplicates
         for (int i = 1; i < n; i++) {
-            if (aux[i] == aux[i - 1])
+            if (aux[i].compareTo(aux[i - 1]) == 0)
               throw new java.lang.IllegalArgumentException("Duplicated Point");
         }
     }
@@ -33,12 +32,14 @@ public class BruteCollinearPoints {
     }
 
     public int numberOfSegments(){        // the number of line segments
+        LineSegment[] segments;
+        segments = segments();
         return segments.length;
     }
     
     public LineSegment[] segments() {                // the line segments
         Stack<LineSegment> stack = new Stack<LineSegment>();
-
+        LineSegment[] segments; 
         for (int i = 0; i < n - 3; i++) {
             for (int j = i + 1; j < n - 2; j++) {
                 double slopeij = aux[i].slopeTo(aux[j]);
